@@ -20,8 +20,10 @@ async function signup(req, res) {
     res.cookie("token", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      // secure: false, // false because localhost is not HTTPS
+      // sameSite: "lax",
+      secure: false,
+      sameSite: "Lax",
     });
     res.status(200).json({ success: true, data: userData });
   } catch (error) {
@@ -33,13 +35,12 @@ async function signup(req, res) {
 async function login(req, res) {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
     if (!user) {
       throw new Error("Invalid Credential");
     }
 
     const isPasswordValidate = await user.validatePassword(password);
-    console.log(isPasswordValidate);
     if (!isPasswordValidate) {
       throw new Error("invalid credential");
     }
@@ -47,8 +48,10 @@ async function login(req, res) {
     res.cookie("token", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      // secure: false, // false because localhost is not HTTPS
+      // sameSite: "lax",
+      secure: false,
+      sameSite: "Lax",
     });
     res.status(200).json({ success: true, data: user });
   } catch (error) {
@@ -58,7 +61,11 @@ async function login(req, res) {
 }
 
 function logout(req, res) {
-  res.clearCookie("token", { secure: "true", sameSite: "strict" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax",
+  });
   res.json({ success: true, message: "logout successful!" });
 }
 module.exports = { signup, login, logout };

@@ -62,6 +62,6 @@ userSchema.methods.validatePassword = async function (userInputPassword) {
     console.error("get error while validating password" + error);
   }
 };
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

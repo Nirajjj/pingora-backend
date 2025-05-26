@@ -14,7 +14,7 @@ async function authenticate(req, res, next) {
     if (!user) {
       res.status(400).send("Unauthorized access");
     }
-    res.user = user;
+    req.user = user;
     next();
   } catch (error) {
     res.status(400).send({ success: false, error: error.message });
